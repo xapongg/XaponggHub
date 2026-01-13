@@ -252,16 +252,14 @@ task.spawn(function()
     end
 end)
 
--- VARIABLES
+-- VARIABLES UNTUK TOGGLE BARU
 local CustomAutoBuy = false
 local CustomBuyIntervalMin = 0.5 -- default interval dalam menit
-local CustomSelectedItem = "ExampleContainer" -- ganti sesuai item
-local CustomSelectedAmount = 1
 
 -- TOGGLE BARU
 ShopTab:Toggle({
-    Title = "Custom Auto Buy",
-    Desc = "Auto beli container dengan interval custom (menit)",
+    Title = "Custom Auto Buy (Menit)",
+    Desc = "Auto beli container dengan interval custom (menggunakan item & jumlah dari Auto Buy asli)",
     Icon = "repeat",
     Type = "Checkbox",
     Value = false,
@@ -270,7 +268,7 @@ ShopTab:Toggle({
     end
 })
 
--- INPUT INTERVAL UNTUK TOGGLE BARU (MENIT)
+-- INPUT INTERVAL (MENIT)
 ShopTab:Input({
     Title = "Custom Interval (minutes)",
     Desc = "Atur jeda waktu antara pembelian dalam menit",
@@ -293,16 +291,15 @@ ShopTab:Input({
 task.spawn(function()
     while task.wait() do
         if not CustomAutoBuy then continue end
-        if not CustomSelectedItem or CustomSelectedAmount <= 0 then continue end
+        if not SelectedItem or SelectedAmount <= 0 then continue end  -- pakai list Auto Buy asli
 
-        for i = 1, CustomSelectedAmount do
+        for i = 1, SelectedAmount do
             if not CustomAutoBuy then break end
-            BuyItem(CustomSelectedItem)
+            BuyItem(SelectedItem)
             task.wait(CustomBuyIntervalMin * 60) -- konversi menit ke detik
         end
     end
 end)
-
 
 
 --------------------------------------------------
@@ -357,6 +354,7 @@ MiscTab:Slider({
         WalkSpeedValue = v
     end
 })
+
 
 
 
