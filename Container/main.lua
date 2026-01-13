@@ -238,9 +238,9 @@ ShopTab:Toggle({
     end 
 }) 
 
--- LOOP AUTO BUY 
+-- LOOP AUTO BUY 3 mnt sekali
 task.spawn(function() 
-    while task.wait(0.3) do 
+    while task.wait(180) do 
         if not AutoBuy then continue end 
         if not SelectedItem or SelectedAmount <= 0 then continue end 
             
@@ -303,6 +303,7 @@ MiscTab:Slider({
         WalkSpeedValue = v
     end
 })
+
 
 
 
