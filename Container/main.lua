@@ -130,57 +130,72 @@ task.spawn(function()
 end)
 
 --------------------------------------------------
---// SHOP SYSTEM (AUTO BUY TOGGLE)
+--// SHOP SYSTEM (AUTO BUY TOGGLE) - PRICE BASED
 --------------------------------------------------
-local ShopItems = {
-    "AlienContainer",
-    "AstraContainer",
-    "BasicFlowerContainer",
-    "BlackHoleContainer",
-    "CamoContainer",
-    "CelestialContainer",
-    "ChristmasContainer",
-    "CorruptedContainer",
-    "DeepSpaceContainer",
-    "DiamondContainer",
-    "DreamContainer",
-    "EmeraldContainer",
-    "FireContainer",
-    "FrozenContainer",
-    "GlitchedContainer",
-    "GoldenAuraContainer",
-    "GoldenContainer",
-    "GoodFlowerContainer",
-    "GroupContainer",
-    "InfernalContainer",
-    "JunkContainer",
-    "LavaContainer",
-    "LightningContainer",
-    "MedievalContainer",
-    "MetalContainer",
-    "MilitaryContainer",
-    "MysticContainer",
-    "ObsidianContainer",
-    "OverpoweredContainer",
-    "RubyContainer",
-    "SapphireContainer",
-    "ScratchedContainer",
-    "SealedContainer",
-    "SpaceContainer",
-    "SparkleContainer",
-    "StormedContainer",
-    "TutorialContainer",
-    "VortexContainer"
+
+local ShopData = {
+    { name = "JunkContainer", price = 100 },
+    { name = "ScratchedContainer", price = 200 },
+    { name = "SealedContainer", price = 700 },
+    { name = "MilitaryContainer", price = 3000 },
+    { name = "MetalContainer", price = 10000 },
+    { name = "FrozenContainer", price = 25000 },
+    { name = "LavaContainer", price = 50000 },
+    { name = "StormedContainer", price = 250000 },
+    { name = "LightningContainer", price = 500000 },
+    { name = "InfernalContainer", price = 750000 },
+    { name = "MysticContainer", price = 1500000 },
+    { name = "GlitchedContainer", price = 5000000 },
+    { name = "DreamContainer", price = 25000000 },
+    { name = "CelestialContainer", price = 50000000 },
+    { name = "GoldenContainer", price = 250000000 },
+    { name = "DiamondContainer", price = 500000000 },
+    { name = "EmeraldContainer", price = 2500000000 },
+    { name = "RubyContainer", price = 10000000000 },
+    { name = "SapphireContainer", price = 75000000000 },
+    { name = "SpaceContainer", price = 150000000000 },
+    { name = "DeepSpaceContainer", price = 500000000000 },
+    { name = "VortexContainer", price = 1000000000000 },
+    { name = "BlackHoleContainer", price = 2500000000000 },
+    { name = "CamoContainer", price = 5000000000000 },
+    { name = "ObsidianContainer", price = 50000000000000 },
+    { name = "GoldenAuraContainer", price = 200000000000000 },
+    { name = "ChristmasContainer", price = 2000000000000000 },
+    { name = "MedievalContainer", price = 30000000000000000 },
 }
+
+-- SORT TERMURAH → TERMAHAL
+table.sort(ShopData, function(a, b)
+    return a.price < b.price
+end)
+
+local function formatPrice(p)
+    if p >= 1e15 then return (p/1e15) .. "qd"
+    elseif p >= 1e12 then return (p/1e12) .. "T"
+    elseif p >= 1e9 then return (p/1e9) .. "B"
+    elseif p >= 1e6 then return (p/1e6) .. "M"
+    elseif p >= 1e3 then return (p/1e3) .. "K"
+    else return tostring(p)
+    end
+end
+
+local DisplayPrices = {}
+local PriceToItem = {}
+
+for _, v in ipairs(ShopData) do
+    local label = formatPrice(v.price)
+    table.insert(DisplayPrices, label)
+    PriceToItem[label] = v.name
+end
 
 local AmountOptions = { "1","2","3","4","5","6","7","8" }
 
-local SelectedItem = ShopItems[1]
+local SelectedItem = nil
 local SelectedAmount = 1
 local AutoBuy = false
 
 local function BuyItem(itemName)
-    local prefix = string.char(#itemName) -- BYTE LENGTH (UINT8)
+    local prefix = string.char(#itemName)
     Reliable:FireServer(
         buffer.fromstring("I"),
         buffer.fromstring("\254\001\000\006" .. prefix .. itemName)
@@ -198,15 +213,14 @@ ShopTab:Dropdown({
     end
 })
 
--- DROPDOWN ITEM
+-- DROPDOWN HARGA (TERMURAH)
 ShopTab:Dropdown({
-    Title = "Select Container",
-    Desc = "Pilih container",
-    Values = ShopItems,
-    Search = True,
-    Value = SelectedItem,
+    Title = "Select Price",
+    Desc = "Urut dari termurah",
+    Values = DisplayPrices,
+    Search = true,
     Callback = function(v)
-        SelectedItem = v
+        SelectedItem = PriceToItem[v]
     end
 })
 
@@ -231,10 +245,11 @@ task.spawn(function()
         for i = 1, SelectedAmount do
             if not AutoBuy then break end
             BuyItem(SelectedItem)
-            task.wait(0.15) -- delay aman
+            task.wait(0.15)
         end
     end
 end)
+
 
 
 --------------------------------------------------
@@ -289,3 +304,4 @@ MiscTab:Slider({
         WalkSpeedValue = v
     end
 })
+
