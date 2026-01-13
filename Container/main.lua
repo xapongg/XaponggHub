@@ -226,6 +226,13 @@ ShopTab:Dropdown({
     end
 })
 
+-- VARIABLES
+local AutoBuy = false
+local SelectedItem = nil
+local SelectedAmount = 1
+local LoopInterval = 0.3      -- default interval loop (detik)
+local ItemInterval = 0.15     -- default interval per pembelian (detik)
+
 -- TOGGLE AUTO BUY
 ShopTab:Toggle({
     Title = "Auto Buy Container",
@@ -238,65 +245,54 @@ ShopTab:Toggle({
     end
 })
 
--- LOOP AUTO BUY
-task.spawn(function()
-    while task.wait(0.3) do
-        if not AutoBuy then continue end
-        if not SelectedItem or SelectedAmount <= 0 then continue end
-
-        for i = 1, SelectedAmount do
-            if not AutoBuy then break end
-            BuyItem(SelectedItem)
-            task.wait(0.15)
-        end
-    end
-end)
-
--- VARIABLES UNTUK TOGGLE BARU
-local CustomAutoBuy = false
-local CustomBuyIntervalMin = 0.5 -- default interval dalam menit
-
--- TOGGLE BARU
-ShopTab:Toggle({
-    Title = "Custom Auto Buy (Menit)",
-    Desc = "Auto beli container dengan interval custom (menggunakan item & jumlah dari Auto Buy asli)",
-    Icon = "repeat",
-    Type = "Checkbox",
-    Value = false,
-    Callback = function(v)
-        CustomAutoBuy = v
-    end
-})
-
--- INPUT INTERVAL (MENIT)
+-- INPUT UNTUK LOOP INTERVAL
 ShopTab:Input({
-    Title = "Custom Interval (minutes)",
-    Desc = "Atur jeda waktu antara pembelian dalam menit",
-    Value = tostring(CustomBuyIntervalMin),
+    Title = "Loop Interval (detik)",
+    Desc = "Atur jeda waktu antara setiap loop Auto Buy",
+    Value = tostring(LoopInterval),
     InputIcon = "clock",
     Type = "Input",
-    Placeholder = "Contoh: 0.5 (30 detik)",
+    Placeholder = "Contoh: 0.3",
     Callback = function(input)
         local num = tonumber(input)
         if num and num > 0 then
-            CustomBuyIntervalMin = num
-            print("Custom interval diatur ke " .. CustomBuyIntervalMin .. " menit")
+            LoopInterval = num
+            print("Loop interval diatur ke " .. LoopInterval .. " detik")
         else
             print("Input tidak valid!")
         end
     end
 })
 
--- LOOP AUTO BUY UNTUK TOGGLE BARU
+-- INPUT UNTUK ITEM INTERVAL
+ShopTab:Input({
+    Title = "Item Interval (detik)",
+    Desc = "Atur jeda waktu antara pembelian tiap item",
+    Value = tostring(ItemInterval),
+    InputIcon = "clock",
+    Type = "Input",
+    Placeholder = "Contoh: 0.15",
+    Callback = function(input)
+        local num = tonumber(input)
+        if num and num > 0 then
+            ItemInterval = num
+            print("Item interval diatur ke " .. ItemInterval .. " detik")
+        else
+            print("Input tidak valid!")
+        end
+    end
+})
+
+-- LOOP AUTO BUY DENGAN INTERVAL DINAMIS
 task.spawn(function()
-    while task.wait() do
-        if not CustomAutoBuy then continue end
-        if not SelectedItem or SelectedAmount <= 0 then continue end  -- pakai list Auto Buy asli
+    while task.wait(LoopInterval) do
+        if not AutoBuy then continue end
+        if not SelectedItem or SelectedAmount <= 0 then continue end
 
         for i = 1, SelectedAmount do
-            if not CustomAutoBuy then break end
+            if not AutoBuy then break end
             BuyItem(SelectedItem)
-            task.wait(CustomBuyIntervalMin * 60) -- konversi menit ke detik
+            task.wait(ItemInterval)
         end
     end
 end)
@@ -354,6 +350,7 @@ MiscTab:Slider({
         WalkSpeedValue = v
     end
 })
+
 
 
 
