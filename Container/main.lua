@@ -252,6 +252,57 @@ task.spawn(function()
     end
 end)
 
+-- VARIABLES
+local CustomAutoBuy = false
+local CustomBuyIntervalMin = 0.5 -- default interval dalam menit
+local CustomSelectedItem = "ExampleContainer" -- ganti sesuai item
+local CustomSelectedAmount = 1
+
+-- TOGGLE BARU
+ShopTab:Toggle({
+    Title = "Custom Auto Buy",
+    Desc = "Auto beli container dengan interval custom (menit)",
+    Icon = "repeat",
+    Type = "Checkbox",
+    Value = false,
+    Callback = function(v)
+        CustomAutoBuy = v
+    end
+})
+
+-- INPUT INTERVAL UNTUK TOGGLE BARU (MENIT)
+ShopTab:Input({
+    Title = "Custom Interval (minutes)",
+    Desc = "Atur jeda waktu antara pembelian dalam menit",
+    Value = tostring(CustomBuyIntervalMin),
+    InputIcon = "clock",
+    Type = "Input",
+    Placeholder = "Contoh: 0.5 (30 detik)",
+    Callback = function(input)
+        local num = tonumber(input)
+        if num and num > 0 then
+            CustomBuyIntervalMin = num
+            print("Custom interval diatur ke " .. CustomBuyIntervalMin .. " menit")
+        else
+            print("Input tidak valid!")
+        end
+    end
+})
+
+-- LOOP AUTO BUY UNTUK TOGGLE BARU
+task.spawn(function()
+    while task.wait() do
+        if not CustomAutoBuy then continue end
+        if not CustomSelectedItem or CustomSelectedAmount <= 0 then continue end
+
+        for i = 1, CustomSelectedAmount do
+            if not CustomAutoBuy then break end
+            BuyItem(CustomSelectedItem)
+            task.wait(CustomBuyIntervalMin * 60) -- konversi menit ke detik
+        end
+    end
+end)
+
 
 
 --------------------------------------------------
@@ -306,6 +357,7 @@ MiscTab:Slider({
         WalkSpeedValue = v
     end
 })
+
 
 
 
