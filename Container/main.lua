@@ -299,11 +299,12 @@ MiscTab:Slider({
     Value = {
         Min = 16,
         Max = 150,
-        Default = 70,
+        Default = 16,
     },
     Callback = function(v)
         WalkSpeedValue = v
     end
 })
+
 
 
