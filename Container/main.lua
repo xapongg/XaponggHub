@@ -149,6 +149,7 @@ local ShopData = {
     { name = "AstralContainer", price = 10000000 },
     { name = "DreamContainer", price = 25000000 },
     { name = "CelestialContainer", price = 50000000 },
+    { name = "FireContainer", price = 100000000 },
     { name = "GoldenContainer", price = 250000000 },
     { name = "DiamondContainer", price = 500000000 },
     { name = "EmeraldContainer", price = 2500000000 },
@@ -305,6 +306,7 @@ MiscTab:Slider({
         WalkSpeedValue = v
     end
 })
+
 
 
 
