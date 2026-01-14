@@ -340,6 +340,31 @@ MiscTab:Slider({
     end
 })
 
+local Players = game:GetService("Players")
+local player = Players.LocalPlayer
+
+-- simpan nilai default
+local DefaultMinZoom = player.CameraMinZoomDistance
+local DefaultMaxZoom = player.CameraMaxZoomDistance
+
+MiscTab:Toggle({
+    Title = "Unlimited Camera Zoom",
+    Desc = "Remove camera zoom limits",
+    Icon = "camera",
+    Type = "Checkbox",
+    Value = false,
+    Callback = function(state)
+        if state then
+            -- zoom bebas
+            player.CameraMinZoomDistance = 0
+            player.CameraMaxZoomDistance = 9e9
+        else
+            -- balik ke default
+            player.CameraMinZoomDistance = DefaultMinZoom
+            player.CameraMaxZoomDistance = DefaultMaxZoom
+        end
+    end
+})
 
 
 
