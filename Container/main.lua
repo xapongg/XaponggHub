@@ -4,8 +4,77 @@ local WindUI = loadstring(game:HttpGet(
 ))()
 
 local Window = WindUI:CreateWindow({
-    Title = "Container RNG by Xapongg",
-    Icon = "package"
+    Title = "Container RNG",
+    Icon = "package", -- lucide icon
+    Author = "Xapongg",
+    Folder = "ContainerRNG",
+    
+    -- ↓ This all is Optional. You can remove it.
+    Size = UDim2.fromOffset(580, 460),
+    MinSize = Vector2.new(560, 350),
+    MaxSize = Vector2.new(850, 560),
+    Transparent = true,
+    Theme = "Dark",
+    Resizable = true,
+    SideBarWidth = 200,
+    BackgroundImageTransparency = 0.42,
+    HideSearchBar = true,
+    ScrollBarEnabled = false,
+    
+    -- ↓ Optional. You can remove it.
+    --[[ You can set 'rbxassetid://' or video to Background.
+        'rbxassetid://':
+            Background = "rbxassetid://", -- rbxassetid
+        Video:
+            Background = "video:YOUR-RAW-LINK-TO-VIDEO.webm", -- video 
+    --]]
+    
+    -- ↓ Optional. You can remove it.
+    User = {
+        Enabled = true,
+        Anonymous = false,
+        Callback = function()
+            print("clicked")
+        end,
+    },
+    
+    --       remove this all, 
+    -- !  ↓  if you DON'T need the key system
+    KeySystem = { 
+        -- ↓ Optional. You can remove it.
+        Key = { "1234", "xapongg", "0" },
+        
+        Note = "Example Key System.",
+        
+        -- ↓ Optional. You can remove it.
+        Thumbnail = {
+            Image = "rbxassetid://",
+            Title = "Thumbnail",
+        },
+        
+        -- ↓ Optional. You can remove it.
+        URL = "YOUR LINK TO GET KEY (Discord, Linkvertise, Pastebin, etc.)",
+        
+        -- ↓ Optional. You can remove it.
+        SaveKey = false, -- automatically save and load the key.
+        
+        -- ↓ Optional. You can remove it.
+        -- API = {} ← Services. Read about it below ↓
+    },
+})
+
+Window:EditOpenButton({
+    Title = "Container RNG",
+    Icon = "package",
+    CornerRadius = UDim.new(0,16),
+    StrokeThickness = 2,
+    Color = ColorSequence.new( -- gradient
+        Color3.fromHex("FF0F7B"), 
+        Color3.fromHex("F89B29")
+    ),
+    OnlyMobile = false,
+    Enabled = true,
+    Draggable = true,
 })
 
 local MainTab = Window:Tab({ Title = "Main", Icon = "home" })
@@ -41,6 +110,8 @@ local AutoCollect = false
 local AutoPlace = false
 local SpeedEnabled = false
 local WalkSpeedValue = 16
+local AntiAFK = false
+
 
 --------------------------------------------------
 --// UTIL: ITEM DI AREA CONTAINER SAJA
@@ -136,6 +207,22 @@ task.spawn(function()
         end
     end
 end)
+
+--------------------------------------------------
+--// ANTI AFK
+--------------------------------------------------
+local VirtualUser = game:GetService("VirtualUser")
+
+game:GetService("Players").LocalPlayer.Idled:Connect(function()
+    if AntiAFK then
+        VirtualUser:Button2Down(Vector2.new(0,0), workspace.CurrentCamera.CFrame)
+        task.wait(1)
+        VirtualUser:Button2Up(Vector2.new(0,0), workspace.CurrentCamera.CFrame)
+    end
+end)
+
+
+
 
 --------------------------------------------------
 --// SHOP SYSTEM (AUTO BUY TOGGLE) - PRICE BASED
@@ -322,6 +409,19 @@ MainTab:Toggle({
 --------------------------------------------------
 --// UI MISC
 --------------------------------------------------
+MiscTab:Toggle({
+    Title = "Anti AFK",
+    Desc = "Prevent idle kick (safe)",
+    Icon = "shield",
+    Type = "Checkbox",
+    Value = false,
+    Callback = function(v)
+        AntiAFK = v
+    end
+})
+
+
+
 MiscTab:Toggle({
     Title = "Enable Speed",
     Icon = "zap",
