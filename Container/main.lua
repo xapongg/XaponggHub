@@ -255,7 +255,7 @@ local ShopData = {
     { name = "VortexContainer", price = 1000000000000 },
     { name = "BlackHoleContainer", price = 2500000000000 },
     { name = "CamoContainer", price = 5000000000000 },
-    { name = "ObsidianContainer", price = 50000000000000 },
+    { name = "ObisidianContainer", price = 50000000000000 },
     { name = "GoldenAuraContainer", price = 200000000000000 },
     { name = "ChristmasContainer", price = 2000000000000000 },
     { name = "MedievalContainer", price = 30000000000000000 },
@@ -473,3 +473,4 @@ MiscTab:Toggle({
         end
     end
 })
+
