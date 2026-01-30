@@ -40,15 +40,14 @@ local Window = WindUI:CreateWindow({
 })
 
 Window:EditOpenButton({
-    Title = "Container RNG",
+    Title = "Pickaxe Simulator",
     Icon = "package",
     CornerRadius = UDim.new(0,16),
     StrokeThickness = 2,
-    Color = ColorSequence.new( -- gradient
-        Color3.fromHex("FF0F7B"), 
+    Color = ColorSequence.new(
+        Color3.fromHex("FF0F7B"),
         Color3.fromHex("F89B29")
     ),
-    OnlyMobile = false,
     Enabled = true,
     Draggable = true,
 })
@@ -75,7 +74,9 @@ local MainTab = Window:Tab({
 --// STATES
 --------------------------------------------------
 local AutoBuy = false
-local AutoClaim = false
+local AutoClaimTime = false
+local AutoRoll = false
+local AutoChest = false
 
 --------------------------------------------------
 --// FUNCTIONS
@@ -86,9 +87,21 @@ local function Buy(slot)
     end)
 end
 
-local function ClaimReward()
+local function ClaimTimeReward()
     pcall(function()
         Remote:InvokeServer("Claim Time Reward")
+    end)
+end
+
+local function Roll()
+    pcall(function()
+        Remote:InvokeServer("Roll")
+    end)
+end
+
+local function ClaimDiceChest()
+    pcall(function()
+        Remote:InvokeServer("Claim Chest", "DiceChest")
     end)
 end
 
@@ -124,12 +137,52 @@ MainTab:Toggle({
     Desc = "Auto claim reward waktu tersedia",
     Default = false,
     Callback = function(state)
-        AutoClaim = state
+        AutoClaimTime = state
         if state then
             task.spawn(function()
-                while AutoClaim do
-                    ClaimReward()
-                    task.wait(30) -- interval aman
+                while AutoClaimTime do
+                    ClaimTimeReward()
+                    task.wait(30)
+                end
+            end)
+        end
+    end
+})
+
+--------------------------------------------------
+--// TOGGLE AUTO ROLL
+--------------------------------------------------
+MainTab:Toggle({
+    Title = "Auto Roll",
+    Desc = "Auto roll terus",
+    Default = false,
+    Callback = function(state)
+        AutoRoll = state
+        if state then
+            task.spawn(function()
+                while AutoRoll do
+                    Roll()
+                    task.wait(0.25)
+                end
+            end)
+        end
+    end
+})
+
+--------------------------------------------------
+--// TOGGLE AUTO CLAIM DICE CHEST
+--------------------------------------------------
+MainTab:Toggle({
+    Title = "Auto Claim Dice Chest",
+    Desc = "Auto claim Dice Chest",
+    Default = false,
+    Callback = function(state)
+        AutoChest = state
+        if state then
+            task.spawn(function()
+                while AutoChest do
+                    ClaimDiceChest()
+                    task.wait(10)
                 end
             end)
         end
