@@ -37,30 +37,6 @@ local Window = WindUI:CreateWindow({
             print("clicked")
         end,
     },
-    
-    --       remove this all, 
-    -- !  ↓  if you DON'T need the key system
-    KeySystem = { 
-        -- ↓ Optional. You can remove it.
-        Key = { "1234", "xapongg", "0" },
-        
-        Note = "Example Key System.",
-        
-        -- ↓ Optional. You can remove it.
-        Thumbnail = {
-            Image = "rbxassetid://",
-            Title = "Thumbnail",
-        },
-        
-        -- ↓ Optional. You can remove it.
-        URL = "YOUR LINK TO GET KEY (Discord, Linkvertise, Pastebin, etc.)",
-        
-        -- ↓ Optional. You can remove it.
-        SaveKey = false, -- automatically save and load the key.
-        
-        -- ↓ Optional. You can remove it.
-        -- API = {} ← Services. Read about it below ↓
-    },
 })
 
 Window:EditOpenButton({
