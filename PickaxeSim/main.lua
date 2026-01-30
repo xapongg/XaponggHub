@@ -71,7 +71,7 @@ local MainTab = Window:Tab({Title = "Main", Icon = "home" })
 local MiscTab = Window:Tab({ Title = "Misc", Icon = "settings" })
 
 --// State
-local AutoBuy = false
+local AutoBuy = true
 local AntiAFK = false
 
 --// Buy function
