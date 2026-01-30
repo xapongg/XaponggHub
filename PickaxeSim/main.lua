@@ -40,14 +40,15 @@ local Window = WindUI:CreateWindow({
 })
 
 Window:EditOpenButton({
-    Title = "Pickaxe Simulator",
+    Title = "Pickaxe Sim",
     Icon = "package",
     CornerRadius = UDim.new(0,16),
     StrokeThickness = 2,
-    Color = ColorSequence.new(
-        Color3.fromHex("FF0F7B"),
+    Color = ColorSequence.new( -- gradient
+        Color3.fromHex("FF0F7B"), 
         Color3.fromHex("F89B29")
     ),
+    OnlyMobile = false,
     Enabled = true,
     Draggable = true,
 })
